@@ -19,7 +19,7 @@ App = {
     }
     // Modern dapp browsers...
     if (window.ethereum) {
-      window.web3 = new Web3(ethereum)
+      window.ethereum = new Web3(ethereum)
       try {
         // Request account access if needed
         await ethereum.enable()
@@ -30,9 +30,9 @@ App = {
       }
     }
     // Legacy dapp browsers...
-    else if (window.web3) {
+    else if (window.ethereum) {
       App.web3Provider = web3.currentProvider
-      window.web3 = new Web3(web3.currentProvider)
+      window.ethereum = new Web3(web3.currentProvider)
       // Acccounts always exposed
       web3.eth.sendTransaction({/* ... */})
     }
@@ -42,10 +42,18 @@ App = {
     }
   },
 
+  // loadAccount: async () => {
+  //   // Set the current blockchain account
+  //   const accountAddress = "0xb14C08C37498a9761A6D2E64673A8b829c2b2800";
+  //   // App.account = web3.eth.accounts[0];
+  //   App.account = accountAddress;
+  // },
+
   loadAccount: async () => {
     // Set the current blockchain account
-    App.account = web3.eth.accounts[0]
-  },
+    const accounts = await web3.eth.getAccounts();
+    App.account = accounts[0];
+},
 
   loadContract: async () => {
     // Create a JavaScript version of the smart contract
@@ -112,14 +120,17 @@ App = {
   createTask: async () => {
     App.setLoading(true)
     const content = $('#newTask').val()
-    await App.todoList.createTask(content)
+    // await App.todoList.createTask(content)
+    console.log(web3.eth.defaultAccount);
+    console.log(App.account);
+    await App.todoList.createTask(content,  { from:  App.account})  
     window.location.reload()
   },
 
   toggleCompleted: async (e) => {
     App.setLoading(true)
     const taskId = e.target.name
-    await App.todoList.toggleCompleted(taskId)
+    await App.todoList.toggleCompleted(taskId, {from: App.account})
     window.location.reload()
   },
 

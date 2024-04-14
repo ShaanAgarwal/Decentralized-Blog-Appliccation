@@ -1,65 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Blog</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <style>
-        main {
-            margin-top: 60px;
-        }
-        #content {
-            display: none;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .navbar {
+        display: flex;
+        width: 100%;
+        height: 10vh;
+        background-color: yellowgreen;
+        justify-content: center;
+        align-items: center;
+        gap: 50%;
+      }
+      .navbar a {
+        font-size: 40px;
+        font-weight: bold;
+      }
+      .navbar .right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .post-form {
+        display: none;
+        position: fixed;
+        top: 10vh;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        max-width: 600px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+        overflow-y: auto;
+        text-align: center;
+      }
+
+      .post-form h2 {
+        margin-bottom: 20px;
+      }
+
+      .post-form .form-label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        text-align: left;
+      }
+
+      .post-form .form-control {
+        width: 100%;
+        margin-bottom: 15px;
+      }
+
+      .post-form textarea.form-control {
+        resize: vertical;
+      }
+
+      .post-form button[type="submit"] {
+        width: 100%;
+      }
+      .post-form input,
+      textarea {
+        height: 50px;
+      }
+      .btn-create-post {
+        font-size: 20px;
+        margin-left: 20px;
+      }
+
+      #postList {
+        margin-top: 20px;
+      }
+
+      .post {
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
+      }
+
+      .post:hover {
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      .post h3 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .post p {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #666;
+      }
+
+      .post p:last-child {
+        margin-bottom: 0;
+      }
     </style>
-</head>
-<body>
-    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">My Blog</a>
-        <ul class="navbar-nav px-3">
-            <li class="nav-item text-nowrap">
-                <a class="nav-link" href="#" id="account">Your Ethereum Address</a>
-            </li>
-        </ul>
+  </head>
+  <body>
+    <nav class="navbar">
+      <a class="navbar-title">MY BLOG</a>
+      <div class="right">
+        <div id="account">Your Ethereum Address</div>
+        <button class="btn btn-create-post">Create Post</button>
+      </div>
     </nav>
     <div class="container-fluid">
-        <main role="main" class="col-lg-12 d-flex justify-content-center">
-            <div id="loader" class="text-center">
-                <p class="text-center">Loading...</p>
-            </div>
-            <div id="content">
-                <h2>Create a New Post</h2>
-                <form id="createPostForm">
-                    <div class="mb-3">
-                        <label for="postTitle" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="postTitle" placeholder="Enter title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="postContent" class="form-label">Content</label>
-                        <textarea class="form-control" id="postContent" rows="3" placeholder="Enter content" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Create Post</button>
-                </form>
-
-                <hr>
-
-                <h2>Blog Posts</h2>
-                <div id="postList"></div>
-            </div>
-        </main>
+      <main role="main" class="col-lg-12 d-flex justify-content-center">
+        <div id="loader" class="text-center">
+          <p class="text-center">Loading...</p>
+        </div>
+        <div id="content">
+          <h2>Blog Posts</h2>
+          <div id="postList"></div>
+        </div>
+      </main>
     </div>
-
-    <!-- Bootstrap Bundle with Popper -->
+    <div class="post-form" id="postForm">
+      <h2>Create a New Post</h2>
+      <form id="createPostForm">
+        <div class="mb-3">
+          <label for="postTitle" class="form-label">Title</label>
+          <input
+            type="text"
+            class="form-control"
+            id="postTitle"
+            placeholder="Enter title"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="postContent" class="form-label">Content</label>
+          <textarea
+            class="form-control"
+            id="postContent"
+            rows="3"
+            placeholder="Enter content"
+            required
+          ></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Post</button>
+      </form>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
-    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
-    <!-- Web3.js -->
     <script src="https://cdn.jsdelivr.net/npm/web3@1.5.0/dist/web3.min.js"></script>
-    <!-- TruffleContract -->
     <script src="https://cdn.jsdelivr.net/npm/truffle-contract/dist/truffle-contract.min.js"></script>
     <script src="https://code.jquery.com/jquery.min.js"></script>
-    <!-- Your App JS -->
     <script src="app.js"></script>
-</body>
+    <script>
+      $(document).ready(function () {
+        $(".btn-create-post").click(function () {
+          $("#postForm").slideToggle();
+        });
+      });
+    </script>
+  </body>
 </html>
